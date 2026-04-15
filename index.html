@@ -18,7 +18,7 @@
     body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6}
     a{color:var(--gold-dk)}
 
-    /* ── LOADING SCREEN ── */
+    /* LOADING SCREEN */
     #loading-screen{
       position:fixed;inset:0;background:#fff;z-index:999;
       display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;
@@ -31,9 +31,14 @@
     .ls-bar-wrap{width:280px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
     .ls-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));border-radius:2px;transition:width .35s ease}
     .ls-status{font-size:13px;color:var(--muted)}
-    .ls-error{font-size:13px;color:var(--red);max-width:400px;text-align:center;display:none}
+    .ls-error{
+      font-size:13px;color:var(--red);max-width:420px;text-align:center;
+      display:none;background:#fff5f5;border:1px solid #fca5a5;
+      padding:1rem 1.5rem;border-radius:8px;line-height:1.8;
+    }
+    .ls-error code{background:#fee2e2;padding:.1rem .4rem;border-radius:3px;font-size:12px}
 
-    /* ── HEADER ── */
+    /* HEADER */
     header{background:#fff;border-bottom:1px solid var(--border);padding:2.5rem 2rem 2rem;position:relative;overflow:hidden}
     header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-lt),var(--gold))}
     .h-inner{max-width:1280px;margin:0 auto}
@@ -45,17 +50,17 @@
     .h-meta span{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:.4rem}
     .h-meta span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
 
-    /* ── STATS BAR ── */
+    /* STATS BAR */
     .stats-bar{background:#fff;border-bottom:1px solid var(--border);padding:1.25rem 2rem}
     .stats-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem}
     .stat-val{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--gold-dk);line-height:1}
     .stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.25rem}
     .stat-note{font-size:11px;color:var(--muted);opacity:.7;margin-top:.1rem}
 
-    /* ── WRAP ── */
+    /* WRAP */
     .wrap{max-width:1280px;margin:0 auto;padding:0 2rem}
 
-    /* ── CONTROLS ── */
+    /* CONTROLS */
     .controls{padding:1.25rem 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:.875rem}
     .ctrl-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
     .ctrl-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
@@ -90,7 +95,22 @@
     .tog-wrap.on .tog::after{left:19px}
     .tog-wrap span{font-size:13px;font-weight:500}
 
-    /* ── CHARTS ── */
+    /* SCENARIO INFO BOX */
+    .scenario-info{
+      margin-top:1.25rem;
+      padding:.85rem 1.1rem;
+      background:#fff;
+      border:1px solid var(--border);
+      border-left:3px solid var(--gold-dk);
+      border-radius:0 8px 8px 0;
+      font-size:13px;
+      color:var(--muted);
+      max-width:780px;
+      line-height:1.6;
+    }
+    .scenario-info strong{color:var(--text)}
+
+    /* CHARTS */
     .charts-section{padding:2rem 0 3rem}
     .chart-row{display:grid;gap:1.25rem;margin-bottom:1.25rem}
     .chart-row.two{grid-template-columns:1fr 1fr}
@@ -106,7 +126,6 @@
     .chart-wrap.tall{position:relative;height:320px}
     .chart-wrap.std{position:relative;height:260px}
 
-    /* ── FOOTER ── */
     footer{background:#fff;border-top:1px solid var(--border);padding:1.75rem 2rem;text-align:center;color:var(--muted);font-size:12px}
     footer em{color:var(--gold-dk)}
 
@@ -118,22 +137,16 @@
 </head>
 <body>
 
-<!-- ── LOADING SCREEN ── -->
+<!-- LOADING SCREEN -->
 <div id="loading-screen">
   <div class="ls-eyebrow">Canada Energy Regulator · Open Data</div>
   <div class="ls-title">Canada's Energy <em>Future</em> 2026</div>
   <div class="ls-bar-wrap"><div class="ls-bar" id="ls-bar"></div></div>
   <div class="ls-status" id="ls-status">Loading data…</div>
-  <div class="ls-error" id="ls-error">
-    Could not load the data files. Make sure the four CSV files are in the same folder as this HTML file:<br><br>
-    <code>primary-demand-2026.csv</code><br>
-    <code>electricity-generation-2026.csv</code><br>
-    <code>greenhouse-gas-emissions-2026.csv</code><br>
-    <code>crude-oil-production-2026.csv</code>
-  </div>
+  <div class="ls-error" id="ls-error"></div>
 </div>
 
-<!-- ── HEADER ── -->
+<!-- HEADER -->
 <header>
   <div class="h-inner">
     <div class="eyebrow">Canada Energy Regulator · Open Data · 2026</div>
@@ -142,12 +155,12 @@
     <div class="h-meta">
       <span>Canada Energy Regulator (CER) Open Data</span>
       <span>Temporal coverage: 2005–2050</span>
-      <span>Four scenarios: Current Measures · Higher · Lower · Net-Zero</span>
+      <span>Four forecasts: Current · High Growth · Low Growth · Net-Zero by 2050</span>
     </div>
   </div>
 </header>
 
-<!-- ── STATS BAR ── -->
+<!-- STATS BAR -->
 <div class="stats-bar">
   <div class="stats-inner">
     <div>
@@ -173,16 +186,16 @@
   </div>
 </div>
 
-<!-- ── MAIN ── -->
+<!-- MAIN -->
 <div class="wrap">
   <div class="controls">
     <div class="ctrl-row">
-      <span class="ctrl-label">Scenario</span>
+      <span class="ctrl-label">Forecast</span>
       <div class="pills" id="sc-pills">
-        <button class="pill active" data-s="Current Measures">Current Measures</button>
-        <button class="pill" data-s="Higher">Higher</button>
-        <button class="pill" data-s="Lower">Lower</button>
-        <button class="pill" data-s="Canada Net-zero">Net-Zero</button>
+        <button class="pill active" data-s="Current Measures">Current Forecast</button>
+        <button class="pill" data-s="Higher">High Growth</button>
+        <button class="pill" data-s="Lower">Low Growth</button>
+        <button class="pill" data-s="Canada Net-zero">Net-Zero by 2050</button>
       </div>
     </div>
     <div class="ctrl-row">
@@ -196,9 +209,10 @@
       </div>
       <div class="tog-wrap" id="tog" style="margin-left:auto">
         <div class="tog"></div>
-        <span>Compare all scenarios</span>
+        <span>Compare all forecasts</span>
       </div>
     </div>
+    <div class="scenario-info" id="scenario-info"></div>
   </div>
 
   <div class="charts-section">
@@ -213,13 +227,13 @@
     <div class="chart-row two">
       <div class="chart-card">
         <div class="chart-hd"><div class="chart-title">GHG Emissions</div><div class="chart-badge">Mt CO₂e</div></div>
-        <div class="chart-sub">Greenhouse gas projections by scenario</div>
+        <div class="chart-sub">Greenhouse gas projections by forecast</div>
         <div class="chart-legend" id="leg-ghg"></div>
         <div class="chart-wrap std"><canvas id="c-ghg"></canvas></div>
       </div>
       <div class="chart-card">
         <div class="chart-hd"><div class="chart-title">Electricity Generation</div><div class="chart-badge">TWh</div></div>
-        <div class="chart-sub">Total power generation by scenario</div>
+        <div class="chart-sub">Total power generation by forecast</div>
         <div class="chart-legend" id="leg-elec"></div>
         <div class="chart-wrap std"><canvas id="c-elec"></canvas></div>
       </div>
@@ -241,7 +255,7 @@
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
-// CSV files are fetched relative to this HTML file — just put them in the same folder.
+// CSV filenames — must be in the same folder as this index.html
 const FILES = {
   primary: 'primary-demand-2026.csv',
   ghg:     'greenhouse-gas-emissions-2026.csv',
@@ -249,17 +263,28 @@ const FILES = {
   oil:     'crude-oil-production-2026.csv',
 };
 
+// Internal CER scenario names (as they appear in the CSV data)
 const SC_COLORS = {
   'Current Measures': '#8a6200',
   'Higher':           '#1a56a0',
   'Lower':            '#1e7e34',
   'Canada Net-zero':  '#c0392b',
 };
+
+// Friendly display labels shown to visitors
 const SC_LABELS = {
-  'Current Measures': 'Current Measures',
-  'Higher':           'Higher',
-  'Lower':            'Lower',
-  'Canada Net-zero':  'Net-Zero',
+  'Current Measures': 'Current Forecast',
+  'Higher':           'High Growth',
+  'Lower':            'Low Growth',
+  'Canada Net-zero':  'Net-Zero by 2050',
+};
+
+// Plain-English descriptions shown below the scenario buttons
+const SC_DESC = {
+  'Current Measures': '<strong>Current Forecast:</strong> The baseline projection — assumes existing policies and regulations remain in place, with economic growth and energy trends continuing at their current pace.',
+  'Higher':           '<strong>High Growth:</strong> Assumes stronger GDP growth, increased LNG exports, higher global oil and gas prices, and greater electricity demand from data centres — Canada produces and consumes more energy overall.',
+  'Lower':            '<strong>Low Growth:</strong> The opposite of High Growth — weaker economic activity, lower global energy prices, and subdued demand. Canada\'s energy needs are reduced compared to the baseline.',
+  'Canada Net-zero':  '<strong>Net-Zero by 2050:</strong> Unlike the other three forecasts, this scenario works backward from a predetermined goal: Canada achieving net-zero greenhouse gas emissions by 2050. It requires major shifts toward renewables, hydrogen, and electrification.',
 };
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
@@ -272,21 +297,27 @@ function setProgress(pct, msg) {
   document.getElementById('ls-status').textContent = msg;
 }
 
-function showError() {
+function showError(msg) {
   document.getElementById('ls-status').style.display = 'none';
-  document.getElementById('ls-bar-wrap') && (document.querySelector('.ls-bar-wrap').style.display = 'none');
-  document.getElementById('ls-error').style.display = 'block';
+  document.querySelector('.ls-bar-wrap').style.display = 'none';
+  const el = document.getElementById('ls-error');
+  el.innerHTML = msg;
+  el.style.display = 'block';
 }
 
-function fetchCSV(filename) {
+// Use native fetch() to get CSV text, then PapaParse to parse the string
+// This is more reliable than PapaParse's download:true (which uses XHR)
+async function fetchCSV(filename) {
+  const response = await fetch(filename);
+  if (!response.ok) throw new Error(`HTTP ${response.status} for ${filename}`);
+  const text = await response.text();
   return new Promise((resolve, reject) => {
-    Papa.parse(filename, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: r => resolve(r.data),
-      error: e => reject(e),
-    });
+    const result = Papa.parse(text, { header: true, skipEmptyLines: true });
+    if (result.errors.length && result.data.length === 0) {
+      reject(new Error(`Parse error in ${filename}`));
+    } else {
+      resolve(result.data);
+    }
   });
 }
 
@@ -295,12 +326,13 @@ async function loadAll() {
   try {
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-      setProgress((i / keys.length) * 90, `Loading ${FILES[key]}…`);
+      setProgress(((i) / keys.length) * 90, `Loading ${FILES[key]}…`);
       raw[key] = await fetchCSV(FILES[key]);
       cols[key] = detectCols(raw[key]);
     }
     setProgress(100, 'Ready');
     populateRegions();
+    updateScenarioInfo();
     renderAll();
     setTimeout(() => {
       const s = document.getElementById('loading-screen');
@@ -309,7 +341,15 @@ async function loadAll() {
     }, 300);
   } catch(e) {
     console.error(e);
-    showError();
+    showError(`
+      <strong>Could not load data files.</strong><br><br>
+      Make sure these four CSV files are in the same folder as <code>index.html</code>:<br><br>
+      <code>primary-demand-2026.csv</code><br>
+      <code>electricity-generation-2026.csv</code><br>
+      <code>greenhouse-gas-emissions-2026.csv</code><br>
+      <code>crude-oil-production-2026.csv</code><br><br>
+      <em>Error: ${e.message}</em>
+    `);
   }
 }
 
@@ -390,7 +430,9 @@ function makeChart(canvasId, key, unit) {
           titleColor:'#1a1714', bodyColor:'#6b6560',
           titleFont: { family:"'DM Sans',sans-serif", size:12, weight:'600' },
           bodyFont:  { family:"'DM Sans',sans-serif", size:12 },
-          callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y?.toLocaleString(undefined,{maximumFractionDigits:1})} ${unit}` }
+          callbacks: {
+            label: c => ` ${c.dataset.label}: ${c.parsed.y?.toLocaleString(undefined,{maximumFractionDigits:1})} ${unit}`
+          }
         }
       },
       scales: {
@@ -409,7 +451,7 @@ function renderLegend(id) {
 }
 
 function updateStats() {
-  [['primary','PJ'],['elec','TWh'],['ghg','Mt'],['oil','Mbbl/d']].forEach(([key]) => {
+  [['primary'],['elec'],['ghg'],['oil']].forEach(([key]) => {
     const v = aggregate(key, state.scenario, state.region)[2050];
     document.getElementById('s-'+key).textContent = (v != null && !isNaN(v))
       ? v.toLocaleString(undefined, {maximumFractionDigits:0}) : '—';
@@ -417,8 +459,13 @@ function updateStats() {
   });
 }
 
+function updateScenarioInfo() {
+  document.getElementById('scenario-info').innerHTML = SC_DESC[state.scenario] || '';
+}
+
 function renderAll() {
   updateStats();
+  updateScenarioInfo();
   [['primary','PJ'],['ghg','Mt CO₂e'],['elec','TWh'],['oil','Mbbl/d']].forEach(([key,unit]) => {
     if (!raw[key]) return;
     makeChart('c-'+key, key, unit);
@@ -450,12 +497,14 @@ document.querySelectorAll('#sc-pills .pill').forEach(btn => {
   });
 });
 
-document.getElementById('region-sel').addEventListener('change', e => { state.region = e.target.value; renderAll(); });
+document.getElementById('region-sel').addEventListener('change', e => {
+  state.region = e.target.value; renderAll();
+});
 
 const yrS = document.getElementById('yr-start'), yrE = document.getElementById('yr-end'), yrL = document.getElementById('yr-label');
 function updateYears() {
   let s = +yrS.value, e = +yrE.value;
-  if (s > e) [s, e] = [e, s];
+  if (s > e) [s,e] = [e,s];
   state.yearStart = s; state.yearEnd = e;
   yrL.textContent = `${s} – ${e}`;
   renderAll();
