@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canada Energy Future 2026 — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #f8f7f4; --surface: #ffffff; --surface2: #f0ede8;
+      --border: #e2ddd6; --text: #1a1714; --muted: #6b6560;
+      --gold: #b8860b; --gold-dk: #8a6200; --gold-lt: #d4a843;
+      --red: #c0392b; --green: #1e7e34; --blue: #1a56a0;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6}
+    a{color:var(--gold-dk)}
+
+    /* ── LOADING SCREEN ── */
+    #loading-screen{
+      position:fixed;inset:0;background:#fff;z-index:999;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;
+      transition:opacity .4s;
+    }
+    #loading-screen.fade-out{opacity:0;pointer-events:none}
+    .ls-eyebrow{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dk)}
+    .ls-title{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;line-height:1.1;text-align:center}
+    .ls-title em{font-style:italic;color:var(--gold-dk)}
+    .ls-bar-wrap{width:280px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+    .ls-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));border-radius:2px;transition:width .35s ease}
+    .ls-status{font-size:13px;color:var(--muted)}
+    .ls-error{font-size:13px;color:var(--red);max-width:400px;text-align:center;display:none}
+
+    /* ── HEADER ── */
+    header{background:#fff;border-bottom:1px solid var(--border);padding:2.5rem 2rem 2rem;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-lt),var(--gold))}
+    .h-inner{max-width:1280px;margin:0 auto}
+    .eyebrow{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:.75rem}
+    h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;line-height:1.1;margin-bottom:.75rem}
+    h1 em{font-style:italic;color:var(--gold-dk)}
+    .subtitle{color:var(--muted);font-size:.95rem;max-width:680px;margin-bottom:1.25rem}
+    .h-meta{display:flex;gap:2rem;flex-wrap:wrap}
+    .h-meta span{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:.4rem}
+    .h-meta span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
+
+    /* ── STATS BAR ── */
+    .stats-bar{background:#fff;border-bottom:1px solid var(--border);padding:1.25rem 2rem}
+    .stats-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem}
+    .stat-val{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--gold-dk);line-height:1}
+    .stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.25rem}
+    .stat-note{font-size:11px;color:var(--muted);opacity:.7;margin-top:.1rem}
+
+    /* ── WRAP ── */
+    .wrap{max-width:1280px;margin:0 auto;padding:0 2rem}
+
+    /* ── CONTROLS ── */
+    .controls{padding:1.25rem 0;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:.875rem}
+    .ctrl-row{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+    .ctrl-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+
+    .pills{display:flex;gap:.4rem;flex-wrap:wrap}
+    .pill{
+      padding:.35rem .9rem;border-radius:20px;border:1px solid var(--border);
+      background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;
+      font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;
+    }
+    .pill:hover{border-color:var(--gold);color:var(--gold-dk)}
+    .pill.active{background:var(--gold-dk);border-color:var(--gold-dk);color:#fff;font-weight:600}
+    .pill[data-s="Higher"].active{background:var(--blue);border-color:var(--blue)}
+    .pill[data-s="Lower"].active{background:var(--green);border-color:var(--green)}
+    .pill[data-s="Canada Net-zero"].active{background:var(--red);border-color:var(--red)}
+
+    select{
+      padding:.45rem .9rem;background:#fff;border:1px solid var(--border);border-radius:8px;
+      color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;
+      outline:none;transition:border-color .15s;
+    }
+    select:focus{border-color:var(--gold)}
+
+    .year-group{display:flex;align-items:center;gap:.6rem}
+    .year-val{font-size:13px;font-weight:600;color:var(--gold-dk);min-width:90px;text-align:center}
+    input[type=range]{accent-color:var(--gold-dk);cursor:pointer;width:100px}
+
+    .tog-wrap{display:flex;align-items:center;gap:.6rem;cursor:pointer;user-select:none}
+    .tog{width:36px;height:20px;background:var(--border);border-radius:10px;position:relative;transition:background .2s;flex-shrink:0}
+    .tog::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+    .tog-wrap.on .tog{background:var(--gold-dk)}
+    .tog-wrap.on .tog::after{left:19px}
+    .tog-wrap span{font-size:13px;font-weight:500}
+
+    /* ── CHARTS ── */
+    .charts-section{padding:2rem 0 3rem}
+    .chart-row{display:grid;gap:1.25rem;margin-bottom:1.25rem}
+    .chart-row.two{grid-template-columns:1fr 1fr}
+    .chart-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:border-color .2s}
+    .chart-card:hover{border-color:var(--gold-lt)}
+    .chart-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.3rem}
+    .chart-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700}
+    .chart-badge{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;padding:.2rem .65rem;border-radius:4px;background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+    .chart-sub{font-size:12px;color:var(--muted);margin-bottom:.85rem}
+    .chart-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.85rem}
+    .leg-item{display:flex;align-items:center;gap:.4rem;font-size:11px;color:var(--muted)}
+    .leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .chart-wrap.tall{position:relative;height:320px}
+    .chart-wrap.std{position:relative;height:260px}
+
+    /* ── FOOTER ── */
+    footer{background:#fff;border-top:1px solid var(--border);padding:1.75rem 2rem;text-align:center;color:var(--muted);font-size:12px}
+    footer em{color:var(--gold-dk)}
+
+    @media(max-width:900px){
+      .chart-row.two{grid-template-columns:1fr}
+      header,.stats-bar,.wrap,footer{padding-left:1.25rem;padding-right:1.25rem}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOADING SCREEN ── -->
+<div id="loading-screen">
+  <div class="ls-eyebrow">Canada Energy Regulator · Open Data</div>
+  <div class="ls-title">Canada's Energy <em>Future</em> 2026</div>
+  <div class="ls-bar-wrap"><div class="ls-bar" id="ls-bar"></div></div>
+  <div class="ls-status" id="ls-status">Loading data…</div>
+  <div class="ls-error" id="ls-error">
+    Could not load the data files. Make sure the four CSV files are in the same folder as this HTML file:<br><br>
+    <code>primary-demand-2026.csv</code><br>
+    <code>electricity-generation-2026.csv</code><br>
+    <code>greenhouse-gas-emissions-2026.csv</code><br>
+    <code>crude-oil-production-2026.csv</code>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="h-inner">
+    <div class="eyebrow">Canada Energy Regulator · Open Data · 2026</div>
+    <h1>Canada's Energy <em>Future</em> 2026</h1>
+    <p class="subtitle">Energy supply and demand projections to 2050 — four scenarios exploring how Canada's energy system could evolve under different economic and climate pathways.</p>
+    <div class="h-meta">
+      <span>Canada Energy Regulator (CER) Open Data</span>
+      <span>Temporal coverage: 2005–2050</span>
+      <span>Four scenarios: Current Measures · Higher · Lower · Net-Zero</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── STATS BAR ── -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div>
+      <div class="stat-val" id="s-primary">—</div>
+      <div class="stat-lbl">Primary Demand (PJ)</div>
+      <div class="stat-note" id="sn-primary">2050 projection</div>
+    </div>
+    <div>
+      <div class="stat-val" id="s-elec">—</div>
+      <div class="stat-lbl">Electricity Gen. (TWh)</div>
+      <div class="stat-note" id="sn-elec">2050 projection</div>
+    </div>
+    <div>
+      <div class="stat-val" id="s-ghg">—</div>
+      <div class="stat-lbl">GHG Emissions (Mt CO₂e)</div>
+      <div class="stat-note" id="sn-ghg">2050 projection</div>
+    </div>
+    <div>
+      <div class="stat-val" id="s-oil">—</div>
+      <div class="stat-lbl">Crude Oil (Mbbl/d)</div>
+      <div class="stat-note" id="sn-oil">2050 projection</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="wrap">
+  <div class="controls">
+    <div class="ctrl-row">
+      <span class="ctrl-label">Scenario</span>
+      <div class="pills" id="sc-pills">
+        <button class="pill active" data-s="Current Measures">Current Measures</button>
+        <button class="pill" data-s="Higher">Higher</button>
+        <button class="pill" data-s="Lower">Lower</button>
+        <button class="pill" data-s="Canada Net-zero">Net-Zero</button>
+      </div>
+    </div>
+    <div class="ctrl-row">
+      <span class="ctrl-label">Region</span>
+      <select id="region-sel"><option value="ALL">All Canada</option></select>
+      <span class="ctrl-label" style="margin-left:.5rem">Years</span>
+      <div class="year-group">
+        <input type="range" id="yr-start" min="2005" max="2050" value="2005">
+        <span class="year-val" id="yr-label">2005 – 2050</span>
+        <input type="range" id="yr-end" min="2005" max="2050" value="2050">
+      </div>
+      <div class="tog-wrap" id="tog" style="margin-left:auto">
+        <div class="tog"></div>
+        <span>Compare all scenarios</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-section">
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-hd"><div class="chart-title">Primary Energy Demand</div><div class="chart-badge">Petajoules</div></div>
+        <div class="chart-sub">Total energy demand across all sources and sectors</div>
+        <div class="chart-legend" id="leg-primary"></div>
+        <div class="chart-wrap tall"><canvas id="c-primary"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-row two">
+      <div class="chart-card">
+        <div class="chart-hd"><div class="chart-title">GHG Emissions</div><div class="chart-badge">Mt CO₂e</div></div>
+        <div class="chart-sub">Greenhouse gas projections by scenario</div>
+        <div class="chart-legend" id="leg-ghg"></div>
+        <div class="chart-wrap std"><canvas id="c-ghg"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-hd"><div class="chart-title">Electricity Generation</div><div class="chart-badge">TWh</div></div>
+        <div class="chart-sub">Total power generation by scenario</div>
+        <div class="chart-legend" id="leg-elec"></div>
+        <div class="chart-wrap std"><canvas id="c-elec"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-hd"><div class="chart-title">Crude Oil Production</div><div class="chart-badge">Thousand bbl/day</div></div>
+        <div class="chart-sub">Conventional and oil sands production</div>
+        <div class="chart-legend" id="leg-oil"></div>
+        <div class="chart-wrap tall"><canvas id="c-oil"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>Source: <em>Canada's Energy Future 2026</em>, Canada Energy Regulator &nbsp;·&nbsp; Open Government Licence – Canada &nbsp;·&nbsp; Projections: 2005–2050</p>
+</footer>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+// CSV files are fetched relative to this HTML file — just put them in the same folder.
+const FILES = {
+  primary: 'primary-demand-2026.csv',
+  ghg:     'greenhouse-gas-emissions-2026.csv',
+  elec:    'electricity-generation-2026.csv',
+  oil:     'crude-oil-production-2026.csv',
+};
+
+const SC_COLORS = {
+  'Current Measures': '#8a6200',
+  'Higher':           '#1a56a0',
+  'Lower':            '#1e7e34',
+  'Canada Net-zero':  '#c0392b',
+};
+const SC_LABELS = {
+  'Current Measures': 'Current Measures',
+  'Higher':           'Higher',
+  'Lower':            'Lower',
+  'Canada Net-zero':  'Net-Zero',
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const raw = {}, cols = {}, charts = {};
+let state = { scenario:'Current Measures', region:'ALL', yearStart:2005, yearEnd:2050, compare:false };
+
+// ── LOADING ───────────────────────────────────────────────────────────────────
+function setProgress(pct, msg) {
+  document.getElementById('ls-bar').style.width = pct + '%';
+  document.getElementById('ls-status').textContent = msg;
+}
+
+function showError() {
+  document.getElementById('ls-status').style.display = 'none';
+  document.getElementById('ls-bar-wrap') && (document.querySelector('.ls-bar-wrap').style.display = 'none');
+  document.getElementById('ls-error').style.display = 'block';
+}
+
+function fetchCSV(filename) {
+  return new Promise((resolve, reject) => {
+    Papa.parse(filename, {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: r => resolve(r.data),
+      error: e => reject(e),
+    });
+  });
+}
+
+async function loadAll() {
+  const keys = Object.keys(FILES);
+  try {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      setProgress((i / keys.length) * 90, `Loading ${FILES[key]}…`);
+      raw[key] = await fetchCSV(FILES[key]);
+      cols[key] = detectCols(raw[key]);
+    }
+    setProgress(100, 'Ready');
+    populateRegions();
+    renderAll();
+    setTimeout(() => {
+      const s = document.getElementById('loading-screen');
+      s.classList.add('fade-out');
+      setTimeout(() => s.style.display = 'none', 400);
+    }, 300);
+  } catch(e) {
+    console.error(e);
+    showError();
+  }
+}
+
+// ── COLUMN DETECTION ──────────────────────────────────────────────────────────
+function detectCols(rows) {
+  if (!rows.length) return {};
+  const keys = Object.keys(rows[0]).map(k => k.trim());
+  return {
+    scenario: keys.find(k => /scenario/i.test(k)),
+    region:   keys.find(k => /region|province|territory/i.test(k)),
+    year:     keys.find(k => /^year$/i.test(k)),
+    value:    keys.find(k => /^value$/i.test(k)),
+  };
+}
+
+// ── DATA PROCESSING ───────────────────────────────────────────────────────────
+function aggregate(key, scenario, region) {
+  const c = cols[key]; if (!c) return {};
+  const out = {};
+  (raw[key] || []).forEach(r => {
+    if (scenario && r[c.scenario]?.trim() !== scenario) return;
+    if (region && region !== 'ALL' && r[c.region]?.trim() !== region) return;
+    const yr = parseInt(r[c.year]), val = parseFloat(r[c.value]);
+    if (!isNaN(yr) && !isNaN(val)) out[yr] = (out[yr] || 0) + val;
+  });
+  return out;
+}
+
+function filterYears(byYear) {
+  const out = {};
+  Object.keys(byYear).forEach(yr => {
+    const y = +yr;
+    if (y >= state.yearStart && y <= state.yearEnd) out[y] = byYear[y];
+  });
+  return out;
+}
+
+function toXY(byYear) {
+  return Object.keys(byYear).map(Number).sort((a,b)=>a-b).map(y => ({x:y, y:byYear[y]}));
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+function h2rgb(hex) {
+  return [1,3,5].map(i => parseInt(hex.slice(i,i+2),16)).join(',');
+}
+
+function buildDatasets(key) {
+  const scenarios = state.compare ? Object.keys(SC_COLORS) : [state.scenario];
+  return scenarios.map(sc => {
+    const color = SC_COLORS[sc];
+    return {
+      label: SC_LABELS[sc],
+      data: toXY(filterYears(aggregate(key, sc, state.region))),
+      borderColor: color,
+      backgroundColor: `rgba(${h2rgb(color)},0.07)`,
+      borderWidth: 2, pointRadius: 0, pointHoverRadius: 4,
+      fill: !state.compare, tension: 0.35,
+    };
+  });
+}
+
+Chart.defaults.color = '#6b6560';
+Chart.defaults.borderColor = '#e2ddd6';
+
+function makeChart(canvasId, key, unit) {
+  if (charts[canvasId]) charts[canvasId].destroy();
+  const ctx = document.getElementById(canvasId).getContext('2d');
+  charts[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: { datasets: buildDatasets(key) },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor:'#fff', borderColor:'#e2ddd6', borderWidth:1, padding:10,
+          titleColor:'#1a1714', bodyColor:'#6b6560',
+          titleFont: { family:"'DM Sans',sans-serif", size:12, weight:'600' },
+          bodyFont:  { family:"'DM Sans',sans-serif", size:12 },
+          callbacks: { label: c => ` ${c.dataset.label}: ${c.parsed.y?.toLocaleString(undefined,{maximumFractionDigits:1})} ${unit}` }
+        }
+      },
+      scales: {
+        x: { type:'linear', ticks:{color:'#6b6560',font:{family:"'DM Sans',sans-serif",size:11},maxTicksLimit:10,callback:v=>v}, grid:{color:'#f0ede8'}, border:{color:'#e2ddd6'} },
+        y: { ticks:{color:'#6b6560',font:{family:"'DM Sans',sans-serif",size:11},callback:v=>v.toLocaleString()}, grid:{color:'#f0ede8'}, border:{color:'#e2ddd6'} }
+      }
+    }
+  });
+}
+
+function renderLegend(id) {
+  const scenarios = state.compare ? Object.keys(SC_COLORS) : [state.scenario];
+  document.getElementById(id).innerHTML = scenarios.map(sc =>
+    `<div class="leg-item"><div class="leg-dot" style="background:${SC_COLORS[sc]}"></div>${SC_LABELS[sc]}</div>`
+  ).join('');
+}
+
+function updateStats() {
+  [['primary','PJ'],['elec','TWh'],['ghg','Mt'],['oil','Mbbl/d']].forEach(([key]) => {
+    const v = aggregate(key, state.scenario, state.region)[2050];
+    document.getElementById('s-'+key).textContent = (v != null && !isNaN(v))
+      ? v.toLocaleString(undefined, {maximumFractionDigits:0}) : '—';
+    document.getElementById('sn-'+key).textContent = `${SC_LABELS[state.scenario]} · 2050`;
+  });
+}
+
+function renderAll() {
+  updateStats();
+  [['primary','PJ'],['ghg','Mt CO₂e'],['elec','TWh'],['oil','Mbbl/d']].forEach(([key,unit]) => {
+    if (!raw[key]) return;
+    makeChart('c-'+key, key, unit);
+    renderLegend('leg-'+key);
+  });
+}
+
+// ── REGIONS ───────────────────────────────────────────────────────────────────
+function populateRegions() {
+  const all = new Set();
+  Object.keys(raw).forEach(k => {
+    const c = cols[k]; if (!c?.region) return;
+    raw[k].forEach(r => { const v = r[c.region]?.trim(); if (v) all.add(v); });
+  });
+  const sel = document.getElementById('region-sel');
+  [...all].sort().forEach(r => {
+    const o = document.createElement('option');
+    o.value = r; o.textContent = r; sel.appendChild(o);
+  });
+}
+
+// ── EVENTS ────────────────────────────────────────────────────────────────────
+document.querySelectorAll('#sc-pills .pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#sc-pills .pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.scenario = btn.dataset.s;
+    renderAll();
+  });
+});
+
+document.getElementById('region-sel').addEventListener('change', e => { state.region = e.target.value; renderAll(); });
+
+const yrS = document.getElementById('yr-start'), yrE = document.getElementById('yr-end'), yrL = document.getElementById('yr-label');
+function updateYears() {
+  let s = +yrS.value, e = +yrE.value;
+  if (s > e) [s, e] = [e, s];
+  state.yearStart = s; state.yearEnd = e;
+  yrL.textContent = `${s} – ${e}`;
+  renderAll();
+}
+yrS.addEventListener('input', updateYears);
+yrE.addEventListener('input', updateYears);
+
+document.getElementById('tog').addEventListener('click', function() {
+  state.compare = !state.compare;
+  this.classList.toggle('on', state.compare);
+  renderAll();
+});
+
+// ── START ─────────────────────────────────────────────────────────────────────
+loadAll();
+</script>
+</body>
+</html>
