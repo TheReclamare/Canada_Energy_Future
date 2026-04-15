@@ -18,24 +18,16 @@
     body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6}
     a{color:var(--gold-dk)}
 
-    /* LOADING SCREEN */
-    #loading-screen{
-      position:fixed;inset:0;background:#fff;z-index:999;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;
-      transition:opacity .4s;
-    }
+    /* LOADING */
+    #loading-screen{position:fixed;inset:0;background:#fff;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;transition:opacity .4s}
     #loading-screen.fade-out{opacity:0;pointer-events:none}
     .ls-eyebrow{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dk)}
-    .ls-title{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;line-height:1.1;text-align:center}
+    .ls-title{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;text-align:center}
     .ls-title em{font-style:italic;color:var(--gold-dk)}
     .ls-bar-wrap{width:280px;height:3px;background:var(--border);border-radius:2px;overflow:hidden}
     .ls-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-lt));border-radius:2px;transition:width .35s ease}
     .ls-status{font-size:13px;color:var(--muted)}
-    .ls-error{
-      font-size:13px;color:var(--red);max-width:420px;text-align:center;
-      display:none;background:#fff5f5;border:1px solid #fca5a5;
-      padding:1rem 1.5rem;border-radius:8px;line-height:1.8;
-    }
+    .ls-error{font-size:13px;color:var(--red);max-width:440px;text-align:center;display:none;background:#fff5f5;border:1px solid #fca5a5;padding:1rem 1.5rem;border-radius:8px;line-height:1.9}
     .ls-error code{background:#fee2e2;padding:.1rem .4rem;border-radius:3px;font-size:12px}
 
     /* HEADER */
@@ -50,14 +42,13 @@
     .h-meta span{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:.4rem}
     .h-meta span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0}
 
-    /* STATS BAR */
+    /* STATS */
     .stats-bar{background:#fff;border-bottom:1px solid var(--border);padding:1.25rem 2rem}
     .stats-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem}
     .stat-val{font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:700;color:var(--gold-dk);line-height:1}
     .stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:.25rem}
     .stat-note{font-size:11px;color:var(--muted);opacity:.7;margin-top:.1rem}
 
-    /* WRAP */
     .wrap{max-width:1280px;margin:0 auto;padding:0 2rem}
 
     /* CONTROLS */
@@ -66,22 +57,15 @@
     .ctrl-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 
     .pills{display:flex;gap:.4rem;flex-wrap:wrap}
-    .pill{
-      padding:.35rem .9rem;border-radius:20px;border:1px solid var(--border);
-      background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;
-      font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;
-    }
+    .pill{padding:.35rem .9rem;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
     .pill:hover{border-color:var(--gold);color:var(--gold-dk)}
-    .pill.active{background:var(--gold-dk);border-color:var(--gold-dk);color:#fff;font-weight:600}
-    .pill[data-s="Higher"].active{background:var(--blue);border-color:var(--blue)}
-    .pill[data-s="Lower"].active{background:var(--green);border-color:var(--green)}
+    .pill.active{font-weight:600;color:#fff}
+    .pill[data-s="Current Measures"].active{background:var(--gold-dk);border-color:var(--gold-dk)}
+    .pill[data-s="Higher Scenario"].active{background:var(--blue);border-color:var(--blue)}
+    .pill[data-s="Lower Scenario"].active{background:var(--green);border-color:var(--green)}
     .pill[data-s="Canada Net-zero"].active{background:var(--red);border-color:var(--red)}
 
-    select{
-      padding:.45rem .9rem;background:#fff;border:1px solid var(--border);border-radius:8px;
-      color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;
-      outline:none;transition:border-color .15s;
-    }
+    select{padding:.45rem .9rem;background:#fff;border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;outline:none;transition:border-color .15s}
     select:focus{border-color:var(--gold)}
 
     .year-group{display:flex;align-items:center;gap:.6rem}
@@ -95,19 +79,7 @@
     .tog-wrap.on .tog::after{left:19px}
     .tog-wrap span{font-size:13px;font-weight:500}
 
-    /* SCENARIO INFO BOX */
-    .scenario-info{
-      margin-top:1.25rem;
-      padding:.85rem 1.1rem;
-      background:#fff;
-      border:1px solid var(--border);
-      border-left:3px solid var(--gold-dk);
-      border-radius:0 8px 8px 0;
-      font-size:13px;
-      color:var(--muted);
-      max-width:780px;
-      line-height:1.6;
-    }
+    .scenario-info{margin-top:1.25rem;padding:.85rem 1.1rem;background:#fff;border:1px solid var(--border);border-left:3px solid var(--gold-dk);border-radius:0 8px 8px 0;font-size:13px;color:var(--muted);max-width:780px;line-height:1.6}
     .scenario-info strong{color:var(--text)}
 
     /* CHARTS */
@@ -137,7 +109,6 @@
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
 <div id="loading-screen">
   <div class="ls-eyebrow">Canada Energy Regulator · Open Data</div>
   <div class="ls-title">Canada's Energy <em>Future</em> 2026</div>
@@ -146,7 +117,6 @@
   <div class="ls-error" id="ls-error"></div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="h-inner">
     <div class="eyebrow">Canada Energy Regulator · Open Data · 2026</div>
@@ -160,47 +130,29 @@
   </div>
 </header>
 
-<!-- STATS BAR -->
 <div class="stats-bar">
   <div class="stats-inner">
-    <div>
-      <div class="stat-val" id="s-primary">—</div>
-      <div class="stat-lbl">Primary Demand (PJ)</div>
-      <div class="stat-note" id="sn-primary">2050 projection</div>
-    </div>
-    <div>
-      <div class="stat-val" id="s-elec">—</div>
-      <div class="stat-lbl">Electricity Gen. (TWh)</div>
-      <div class="stat-note" id="sn-elec">2050 projection</div>
-    </div>
-    <div>
-      <div class="stat-val" id="s-ghg">—</div>
-      <div class="stat-lbl">GHG Emissions (Mt CO₂e)</div>
-      <div class="stat-note" id="sn-ghg">2050 projection</div>
-    </div>
-    <div>
-      <div class="stat-val" id="s-oil">—</div>
-      <div class="stat-lbl">Crude Oil (Mbbl/d)</div>
-      <div class="stat-note" id="sn-oil">2050 projection</div>
-    </div>
+    <div><div class="stat-val" id="s-primary">—</div><div class="stat-lbl">Primary Demand (PJ)</div><div class="stat-note" id="sn-primary">2050 projection</div></div>
+    <div><div class="stat-val" id="s-elec">—</div><div class="stat-lbl">Electricity Gen. (TWh)</div><div class="stat-note" id="sn-elec">2050 projection</div></div>
+    <div><div class="stat-val" id="s-ghg">—</div><div class="stat-lbl">GHG Emissions (Mt CO₂e)</div><div class="stat-note" id="sn-ghg">2050 projection</div></div>
+    <div><div class="stat-val" id="s-oil">—</div><div class="stat-lbl">Crude Oil (Mbbl/d)</div><div class="stat-note" id="sn-oil">2050 projection</div></div>
   </div>
 </div>
 
-<!-- MAIN -->
 <div class="wrap">
   <div class="controls">
     <div class="ctrl-row">
       <span class="ctrl-label">Forecast</span>
       <div class="pills" id="sc-pills">
         <button class="pill active" data-s="Current Measures">Current Forecast</button>
-        <button class="pill" data-s="Higher">High Growth</button>
-        <button class="pill" data-s="Lower">Low Growth</button>
+        <button class="pill" data-s="Higher Scenario">High Growth</button>
+        <button class="pill" data-s="Lower Scenario">Low Growth</button>
         <button class="pill" data-s="Canada Net-zero">Net-Zero by 2050</button>
       </div>
     </div>
     <div class="ctrl-row">
       <span class="ctrl-label">Region</span>
-      <select id="region-sel"><option value="ALL">All Canada</option></select>
+      <select id="region-sel"><option value="Canada">All Canada</option></select>
       <span class="ctrl-label" style="margin-left:.5rem">Years</span>
       <div class="year-group">
         <input type="range" id="yr-start" min="2005" max="2050" value="2005">
@@ -212,7 +164,7 @@
         <span>Compare all forecasts</span>
       </div>
     </div>
-    <div class="scenario-info" id="scenario-info"></div>
+    <div class="scenario-info" id="scenario-info-box"></div>
   </div>
 
   <div class="charts-section">
@@ -226,8 +178,8 @@
     </div>
     <div class="chart-row two">
       <div class="chart-card">
-        <div class="chart-hd"><div class="chart-title">GHG Emissions</div><div class="chart-badge">Mt CO₂e</div></div>
-        <div class="chart-sub">Greenhouse gas projections by forecast</div>
+        <div class="chart-hd"><div class="chart-title">GHG Emissions</div><div class="chart-badge">Megatonnes CO₂e</div></div>
+        <div class="chart-sub">Total greenhouse gas emissions by forecast</div>
         <div class="chart-legend" id="leg-ghg"></div>
         <div class="chart-wrap std"><canvas id="c-ghg"></canvas></div>
       </div>
@@ -240,7 +192,7 @@
     </div>
     <div class="chart-row">
       <div class="chart-card">
-        <div class="chart-hd"><div class="chart-title">Crude Oil Production</div><div class="chart-badge">Thousand bbl/day</div></div>
+        <div class="chart-hd"><div class="chart-title">Crude Oil Production</div><div class="chart-badge">Thousand Barrels / Day</div></div>
         <div class="chart-sub">Conventional and oil sands production</div>
         <div class="chart-legend" id="leg-oil"></div>
         <div class="chart-wrap tall"><canvas id="c-oil"></canvas></div>
@@ -254,81 +206,64 @@
 </footer>
 
 <script>
-// ── CONFIG ────────────────────────────────────────────────────────────────────
-// CSV filenames — must be in the same folder as this index.html
-const FILES = {
-  primary: 'primary-demand-2026.csv',
-  ghg:     'greenhouse-gas-emissions-2026.csv',
-  elec:    'electricity-generation-2026.csv',
-  oil:     'crude-oil-production-2026.csv',
-};
-
-// Internal CER scenario names (as they appear in the CSV data)
+// ── SCENARIO CONFIG ───────────────────────────────────────────────────────────
+// Keys = exact scenario names as they appear in the CSV files
 const SC_COLORS = {
   'Current Measures': '#8a6200',
-  'Higher':           '#1a56a0',
-  'Lower':            '#1e7e34',
+  'Higher Scenario':  '#1a56a0',
+  'Lower Scenario':   '#1e7e34',
   'Canada Net-zero':  '#c0392b',
 };
-
-// Friendly display labels shown to visitors
 const SC_LABELS = {
   'Current Measures': 'Current Forecast',
-  'Higher':           'High Growth',
-  'Lower':            'Low Growth',
+  'Higher Scenario':  'High Growth',
+  'Lower Scenario':   'Low Growth',
   'Canada Net-zero':  'Net-Zero by 2050',
 };
-
-// Plain-English descriptions shown below the scenario buttons
 const SC_DESC = {
   'Current Measures': '<strong>Current Forecast:</strong> The baseline projection — assumes existing policies and regulations remain in place, with economic growth and energy trends continuing at their current pace.',
-  'Higher':           '<strong>High Growth:</strong> Assumes stronger GDP growth, increased LNG exports, higher global oil and gas prices, and greater electricity demand from data centres — Canada produces and consumes more energy overall.',
-  'Lower':            '<strong>Low Growth:</strong> The opposite of High Growth — weaker economic activity, lower global energy prices, and subdued demand. Canada\'s energy needs are reduced compared to the baseline.',
-  'Canada Net-zero':  '<strong>Net-Zero by 2050:</strong> Unlike the other three forecasts, this scenario works backward from a predetermined goal: Canada achieving net-zero greenhouse gas emissions by 2050. It requires major shifts toward renewables, hydrogen, and electrification.',
+  'Higher Scenario':  '<strong>High Growth:</strong> Assumes stronger GDP growth, increased LNG exports, higher global oil and gas prices, and greater electricity demand from data centres — Canada produces and consumes more energy overall.',
+  'Lower Scenario':   '<strong>Low Growth:</strong> Assumes weaker economic activity, lower global energy prices, and subdued demand. Canada\'s energy needs are reduced compared to the baseline.',
+  'Canada Net-zero':  '<strong>Net-Zero by 2050:</strong> Works backward from a predetermined goal: Canada achieving net-zero greenhouse gas emissions by 2050. Requires major shifts toward renewables, hydrogen, and electrification.',
 };
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-const raw = {}, cols = {}, charts = {};
-let state = { scenario:'Current Measures', region:'ALL', yearStart:2005, yearEnd:2050, compare:false };
+const raw = {};
+let state = { scenario:'Current Measures', region:'Canada', yearStart:2005, yearEnd:2050, compare:false };
+const charts = {};
 
 // ── LOADING ───────────────────────────────────────────────────────────────────
 function setProgress(pct, msg) {
   document.getElementById('ls-bar').style.width = pct + '%';
   document.getElementById('ls-status').textContent = msg;
 }
-
 function showError(msg) {
   document.getElementById('ls-status').style.display = 'none';
   document.querySelector('.ls-bar-wrap').style.display = 'none';
   const el = document.getElementById('ls-error');
-  el.innerHTML = msg;
-  el.style.display = 'block';
+  el.innerHTML = msg; el.style.display = 'block';
 }
 
-// Use native fetch() to get CSV text, then PapaParse to parse the string
-// This is more reliable than PapaParse's download:true (which uses XHR)
 async function fetchCSV(filename) {
-  const response = await fetch(filename);
-  if (!response.ok) throw new Error(`HTTP ${response.status} for ${filename}`);
-  const text = await response.text();
-  return new Promise((resolve, reject) => {
-    const result = Papa.parse(text, { header: true, skipEmptyLines: true });
-    if (result.errors.length && result.data.length === 0) {
-      reject(new Error(`Parse error in ${filename}`));
-    } else {
-      resolve(result.data);
-    }
-  });
+  const res = await fetch(filename);
+  if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${filename}`);
+  const text = await res.text();
+  const result = Papa.parse(text, { header:true, skipEmptyLines:true, dynamicTyping:true });
+  return result.data;
 }
 
 async function loadAll() {
-  const keys = Object.keys(FILES);
   try {
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      setProgress(((i) / keys.length) * 90, `Loading ${FILES[key]}…`);
-      raw[key] = await fetchCSV(FILES[key]);
-      cols[key] = detectCols(raw[key]);
+    const files = [
+      ['primary', 'primary-demand-2026.csv'],
+      ['ghg',     'greenhouse-gas-emissions-2026.csv'],
+      ['elec',    'electricity-generation-2026.csv'],
+      ['oil',     'crude-oil-production-2026.csv'],
+    ];
+    for (let i = 0; i < files.length; i++) {
+      const [key, filename] = files[i];
+      setProgress((i / files.length) * 90, `Loading ${filename}…`);
+      raw[key] = await fetchCSV(filename);
     }
     setProgress(100, 'Ready');
     populateRegions();
@@ -341,39 +276,66 @@ async function loadAll() {
     }, 300);
   } catch(e) {
     console.error(e);
-    showError(`
-      <strong>Could not load data files.</strong><br><br>
+    showError(`<strong>Could not load data files.</strong><br><br>
       Make sure these four CSV files are in the same folder as <code>index.html</code>:<br><br>
       <code>primary-demand-2026.csv</code><br>
       <code>electricity-generation-2026.csv</code><br>
       <code>greenhouse-gas-emissions-2026.csv</code><br>
       <code>crude-oil-production-2026.csv</code><br><br>
-      <em>Error: ${e.message}</em>
-    `);
+      <em>${e.message}</em>`);
   }
 }
 
-// ── COLUMN DETECTION ──────────────────────────────────────────────────────────
-function detectCols(rows) {
-  if (!rows.length) return {};
-  const keys = Object.keys(rows[0]).map(k => k.trim());
-  return {
-    scenario: keys.find(k => /scenario/i.test(k)),
-    region:   keys.find(k => /region|province|territory/i.test(k)),
-    year:     keys.find(k => /^year$/i.test(k)),
-    value:    keys.find(k => /^value$/i.test(k)),
-  };
+// ── DATA AGGREGATION ──────────────────────────────────────────────────────────
+// Each dataset has different column structure — handled specifically per dataset
+
+function aggregatePrimary(scenario, region) {
+  // Columns: Scenario, Region, Variable, Year, Value  (PJ)
+  // "Canada" region is the national pre-aggregated total
+  const out = {};
+  raw.primary.forEach(r => {
+    if (r.Scenario !== scenario) return;
+    if (r.Region !== region) return;
+    const yr = +r.Year, val = +r.Value;
+    if (!isNaN(yr) && !isNaN(val)) out[yr] = (out[yr]||0) + val;
+  });
+  return out;
 }
 
-// ── DATA PROCESSING ───────────────────────────────────────────────────────────
-function aggregate(key, scenario, region) {
-  const c = cols[key]; if (!c) return {};
+function aggregateGHG(scenario) {
+  // Columns: Scenario, Year, Unit, Variable, Value  (Megatonnes CO2e)
+  // No Region column — data is national only
   const out = {};
-  (raw[key] || []).forEach(r => {
-    if (scenario && r[c.scenario]?.trim() !== scenario) return;
-    if (region && region !== 'ALL' && r[c.region]?.trim() !== region) return;
-    const yr = parseInt(r[c.year]), val = parseFloat(r[c.value]);
-    if (!isNaN(yr) && !isNaN(val)) out[yr] = (out[yr] || 0) + val;
+  raw.ghg.forEach(r => {
+    if (r.Scenario !== scenario) return;
+    const yr = +r.Year, val = +r.Value;
+    if (!isNaN(yr) && !isNaN(val)) out[yr] = (out[yr]||0) + val;
+  });
+  return out;
+}
+
+function aggregateElec(scenario, region) {
+  // Columns: Scenario, Region, Variable, Type, Year, Value  (GWh → convert to TWh ÷1000)
+  const out = {};
+  raw.elec.forEach(r => {
+    if (r.Scenario !== scenario) return;
+    if (r.Region !== region) return;
+    const yr = +r.Year, val = +r.Value;
+    if (!isNaN(yr) && !isNaN(val)) out[yr] = (out[yr]||0) + (val / 1000); // GWh → TWh
+  });
+  return out;
+}
+
+function aggregateOil(scenario, region) {
+  // Columns: Scenario, Unit, Region, Variable, Year, Value
+  // Two unit types — filter to "Thousand Barrels per day" only
+  const out = {};
+  raw.oil.forEach(r => {
+    if (r.Scenario !== scenario) return;
+    if (r.Region !== region) return;
+    if (r.Unit !== 'Thousand Barrels per day') return;
+    const yr = +r.Year, val = +r.Value;
+    if (!isNaN(yr) && !isNaN(val)) out[yr] = (out[yr]||0) + val;
   });
   return out;
 }
@@ -391,18 +353,28 @@ function toXY(byYear) {
   return Object.keys(byYear).map(Number).sort((a,b)=>a-b).map(y => ({x:y, y:byYear[y]}));
 }
 
-// ── CHARTS ────────────────────────────────────────────────────────────────────
+// ── CHART BUILDING ────────────────────────────────────────────────────────────
 function h2rgb(hex) {
   return [1,3,5].map(i => parseInt(hex.slice(i,i+2),16)).join(',');
 }
 
+function getAggrFn(key) {
+  return {
+    primary: (sc) => aggregatePrimary(sc, state.region),
+    ghg:     (sc) => aggregateGHG(sc),
+    elec:    (sc) => aggregateElec(sc, state.region),
+    oil:     (sc) => aggregateOil(sc, state.region),
+  }[key];
+}
+
 function buildDatasets(key) {
   const scenarios = state.compare ? Object.keys(SC_COLORS) : [state.scenario];
+  const fn = getAggrFn(key);
   return scenarios.map(sc => {
     const color = SC_COLORS[sc];
     return {
       label: SC_LABELS[sc],
-      data: toXY(filterYears(aggregate(key, sc, state.region))),
+      data: toXY(filterYears(fn(sc))),
       borderColor: color,
       backgroundColor: `rgba(${h2rgb(color)},0.07)`,
       borderWidth: 2, pointRadius: 0, pointHoverRadius: 4,
@@ -421,23 +393,21 @@ function makeChart(canvasId, key, unit) {
     type: 'line',
     data: { datasets: buildDatasets(key) },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      interaction: { mode:'index', intersect:false },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor:'#fff', borderColor:'#e2ddd6', borderWidth:1, padding:10,
-          titleColor:'#1a1714', bodyColor:'#6b6560',
-          titleFont: { family:"'DM Sans',sans-serif", size:12, weight:'600' },
-          bodyFont:  { family:"'DM Sans',sans-serif", size:12 },
-          callbacks: {
-            label: c => ` ${c.dataset.label}: ${c.parsed.y?.toLocaleString(undefined,{maximumFractionDigits:1})} ${unit}`
-          }
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#fff',borderColor:'#e2ddd6',borderWidth:1,padding:10,
+          titleColor:'#1a1714',bodyColor:'#6b6560',
+          titleFont:{family:"'DM Sans',sans-serif",size:12,weight:'600'},
+          bodyFont:{family:"'DM Sans',sans-serif",size:12},
+          callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y?.toLocaleString(undefined,{maximumFractionDigits:1})} ${unit}`}
         }
       },
-      scales: {
-        x: { type:'linear', ticks:{color:'#6b6560',font:{family:"'DM Sans',sans-serif",size:11},maxTicksLimit:10,callback:v=>v}, grid:{color:'#f0ede8'}, border:{color:'#e2ddd6'} },
-        y: { ticks:{color:'#6b6560',font:{family:"'DM Sans',sans-serif",size:11},callback:v=>v.toLocaleString()}, grid:{color:'#f0ede8'}, border:{color:'#e2ddd6'} }
+      scales:{
+        x:{type:'linear',ticks:{color:'#6b6560',font:{family:"'DM Sans',sans-serif",size:11},maxTicksLimit:10,callback:v=>v},grid:{color:'#f0ede8'},border:{color:'#e2ddd6'}},
+        y:{ticks:{color:'#6b6560',font:{family:"'DM Sans',sans-serif",size:11},callback:v=>v.toLocaleString()},grid:{color:'#f0ede8'},border:{color:'#e2ddd6'}}
       }
     }
   });
@@ -451,34 +421,42 @@ function renderLegend(id) {
 }
 
 function updateStats() {
-  [['primary'],['elec'],['ghg'],['oil']].forEach(([key]) => {
-    const v = aggregate(key, state.scenario, state.region)[2050];
-    document.getElementById('s-'+key).textContent = (v != null && !isNaN(v))
-      ? v.toLocaleString(undefined, {maximumFractionDigits:0}) : '—';
-    document.getElementById('sn-'+key).textContent = `${SC_LABELS[state.scenario]} · 2050`;
+  const pairs = [
+    ['s-primary','sn-primary', sc => aggregatePrimary(sc, state.region), 'PJ'],
+    ['s-elec',   'sn-elec',   sc => aggregateElec(sc, state.region),    'TWh'],
+    ['s-ghg',    'sn-ghg',    sc => aggregateGHG(sc),                   'Mt'],
+    ['s-oil',    'sn-oil',    sc => aggregateOil(sc, state.region),      'Mbbl/d'],
+  ];
+  pairs.forEach(([vid, nid, fn, unit]) => {
+    const v = fn(state.scenario)[2050];
+    document.getElementById(vid).textContent = (v != null && !isNaN(v))
+      ? v.toLocaleString(undefined,{maximumFractionDigits:0}) : '—';
+    document.getElementById(nid).textContent = `${SC_LABELS[state.scenario]} · 2050`;
   });
 }
 
 function updateScenarioInfo() {
-  document.getElementById('scenario-info').innerHTML = SC_DESC[state.scenario] || '';
+  const box = document.getElementById('scenario-info-box');
+  box.innerHTML = SC_DESC[state.scenario] || '';
+  // Update left border colour to match active scenario
+  box.style.borderLeftColor = SC_COLORS[state.scenario];
 }
 
 function renderAll() {
   updateStats();
   updateScenarioInfo();
-  [['primary','PJ'],['ghg','Mt CO₂e'],['elec','TWh'],['oil','Mbbl/d']].forEach(([key,unit]) => {
-    if (!raw[key]) return;
-    makeChart('c-'+key, key, unit);
-    renderLegend('leg-'+key);
-  });
+  makeChart('c-primary', 'primary', 'PJ');       renderLegend('leg-primary');
+  makeChart('c-ghg',     'ghg',     'Mt CO₂e');  renderLegend('leg-ghg');
+  makeChart('c-elec',    'elec',    'TWh');       renderLegend('leg-elec');
+  makeChart('c-oil',     'oil',     'Mbbl/d');    renderLegend('leg-oil');
 }
 
 // ── REGIONS ───────────────────────────────────────────────────────────────────
 function populateRegions() {
+  // Collect regions from datasets that have a Region column
   const all = new Set();
-  Object.keys(raw).forEach(k => {
-    const c = cols[k]; if (!c?.region) return;
-    raw[k].forEach(r => { const v = r[c.region]?.trim(); if (v) all.add(v); });
+  ['primary','elec','oil'].forEach(key => {
+    (raw[key]||[]).forEach(r => { if (r.Region && r.Region !== 'Canada') all.add(r.Region); });
   });
   const sel = document.getElementById('region-sel');
   [...all].sort().forEach(r => {
@@ -498,7 +476,8 @@ document.querySelectorAll('#sc-pills .pill').forEach(btn => {
 });
 
 document.getElementById('region-sel').addEventListener('change', e => {
-  state.region = e.target.value; renderAll();
+  state.region = e.target.value;
+  renderAll();
 });
 
 const yrS = document.getElementById('yr-start'), yrE = document.getElementById('yr-end'), yrL = document.getElementById('yr-label');
